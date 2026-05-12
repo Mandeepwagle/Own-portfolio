@@ -127,21 +127,31 @@ export default function Projects() {
 
         {/* Filter + Add Button */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-10">
-          <div className="flex flex-wrap gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setFilter(cat)}
-                className="font-mono text-xs tracking-widest px-4 py-2 rounded border transition-all"
-                style={filter === cat
-                  ? { borderColor: "#00f5ff", color: "#00f5ff", backgroundColor: "rgba(0,245,255,0.1)" }
-                  : { borderColor: "rgba(0,245,255,0.2)", color: "#6b7280" }
-                }
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
+          {isAdmin ? (
+            <div className="flex flex-wrap gap-2">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setFilter(cat)}
+                  className="font-mono text-xs tracking-widest px-4 py-2 rounded border transition-all"
+                  style={filter === cat
+                    ? { borderColor: "#00f5ff", color: "#00f5ff", backgroundColor: "rgba(0,245,255,0.1)" }
+                    : { borderColor: "rgba(0,245,255,0.2)", color: "#6b7280" }
+                  }
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowProjectLogin(true)}
+              className="font-mono text-xs tracking-widest px-4 py-2 rounded border border-cyan-500/20 text-gray-400 hover:text-cyan-400 hover:border-cyan-500/40 transition-all"
+            >
+              LOGIN TO FILTER
+            </button>
+          )}
 
           <button
             onClick={() => {
