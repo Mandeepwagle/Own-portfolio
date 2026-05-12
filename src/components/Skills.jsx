@@ -7,7 +7,9 @@ const skillGroups = [
     skills: [
       { name: "React.js", level: 90 },
       { name: "Tailwind CSS", level: 88 },
+      { name: "Bootstrap", level: 85 },
       { name: "JavaScript", level: 85 },
+      { name: "jQuery", level: 80 },
       { name: "HTML/CSS", level: 95 },
     ],
   },
@@ -17,8 +19,10 @@ const skillGroups = [
     skills: [
       { name: "Node.js", level: 80 },
       { name: "Express.js", level: 78 },
+      { name: "Laravel", level: 80 },
       { name: "REST APIs", level: 85 },
       { name: "PHP", level: 70 },
+      { name: "JSON", level: 88 },
     ],
   },
   {
@@ -32,11 +36,22 @@ const skillGroups = [
     ],
   },
   {
-    category: "Tools",
+    category: "Integrations",
+    color: "#facc15",
+    skills: [
+      { name: "Payment Integration", level: 85 },
+      { name: "AI Integration", level: 82 },
+      { name: "n8n Workflow", level: 80 },
+      { name: "API Automation", level: 84 },
+    ],
+  },
+  {
+    category: "Tools & DevOps",
     color: "#39ff14",
     skills: [
       { name: "Git/GitHub", level: 88 },
       { name: "WordPress", level: 90 },
+      { name: "Docker", level: 78 },
       { name: "VS Code", level: 95 },
       { name: "Figma", level: 70 },
       { name: "Vercel", level: 85 },
