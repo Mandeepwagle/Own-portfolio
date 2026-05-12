@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { User, MapPin, Briefcase, GraduationCap } from "lucide-react";
+import AdminLogin from "./AdminLogin";
+import { useAdminAuth } from "../hooks/useAdminAuth";
 
 const stats = [
   { number: "10+", label: "Projects Built" },
@@ -17,7 +19,9 @@ const info = [
 ];
 
 export default function About() {
+  const { isAdmin } = useAdminAuth();
   const [cvFile, setCvFile] = useState(null);
+  const [showCvLogin, setShowCvLogin] = useState(false);
   const cvUrl = useMemo(() => (cvFile ? URL.createObjectURL(cvFile) : ""), [cvFile]);
 
   useEffect(() => {
@@ -104,16 +108,30 @@ export default function About() {
               ))}
             </div>
 
+            {!isAdmin && showCvLogin && (
+              <AdminLogin onSuccess={() => setShowCvLogin(false)} />
+            )}
+
             <div className="flex flex-col sm:flex-row gap-3 mt-4">
-              <label className="cursor-pointer border border-cyan-500/40 rounded px-6 py-3 font-mono text-xs tracking-widest text-cyan-400 hover:bg-cyan-500/10 transition-colors">
-                UPLOAD CV
-                <input
-                  type="file"
-                  accept=".pdf,.doc,.docx"
-                  onChange={(event) => setCvFile(event.target.files?.[0] ?? null)}
-                  className="sr-only"
-                />
-              </label>
+              {isAdmin ? (
+                <label className="cursor-pointer border border-cyan-500/40 rounded px-6 py-3 font-mono text-xs tracking-widest text-cyan-400 hover:bg-cyan-500/10 transition-colors">
+                  UPLOAD CV
+                  <input
+                    type="file"
+                    accept=".pdf,.doc,.docx"
+                    onChange={(event) => setCvFile(event.target.files?.[0] ?? null)}
+                    className="sr-only"
+                  />
+                </label>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setShowCvLogin(true)}
+                  className="border border-cyan-500/40 rounded px-6 py-3 font-mono text-xs tracking-widest text-cyan-400 hover:bg-cyan-500/10 transition-colors"
+                >
+                  UPLOAD CV
+                </button>
+              )}
 
               <a
                 href={cvUrl || "#"}

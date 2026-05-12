@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Code, Plus, X, Save, Trash2 } from "lucide-react";
+import AdminLogin from "./AdminLogin";
+import { useAdminAuth } from "../hooks/useAdminAuth";
 
 const githubProfile = "https://github.com/Mandeepwagle";
 
@@ -53,8 +55,10 @@ const emptyForm = {
 };
 
 export default function Projects() {
+  const { isAdmin } = useAdminAuth();
   const [projects, setProjects] = useState(defaultProjects);
   const [showDashboard, setShowDashboard] = useState(false);
+  const [showProjectLogin, setShowProjectLogin] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [editId, setEditId] = useState(null);
   const [filter, setFilter] = useState("All");
@@ -64,6 +68,7 @@ export default function Projects() {
   const filtered = filter === "All" ? projects : projects.filter((p) => p.category === filter);
 
   function handleSave() {
+    if (!isAdmin) return;
     if (!form.title || !form.description) return;
     const tagsArray = form.tags.split(",").map((t) => t.trim()).filter(Boolean);
     if (editId !== null) {
@@ -77,12 +82,22 @@ export default function Projects() {
   }
 
   function handleEdit(project) {
+    if (!isAdmin) {
+      setShowProjectLogin(true);
+      return;
+    }
+
     setForm({ ...project, tags: project.tags.join(", ") });
     setEditId(project.id);
     setShowDashboard(true);
   }
 
   function handleDelete(id) {
+    if (!isAdmin) {
+      setShowProjectLogin(true);
+      return;
+    }
+
     setProjects(projects.filter((p) => p.id !== id));
   }
 
@@ -129,7 +144,14 @@ export default function Projects() {
           </div>
 
           <button
-            onClick={() => setShowDashboard(!showDashboard)}
+            onClick={() => {
+              if (!isAdmin) {
+                setShowProjectLogin(true);
+                return;
+              }
+
+              setShowDashboard(!showDashboard);
+            }}
             className="animated-border p-px rounded"
           >
             <span className="flex items-center gap-2 bg-black px-4 py-2 rounded font-mono text-xs tracking-widest text-cyan-400 hover:bg-cyan-500/10 transition-colors">
@@ -139,8 +161,19 @@ export default function Projects() {
           </button>
         </div>
 
+        {!isAdmin && showProjectLogin && (
+          <div className="mb-10">
+            <AdminLogin
+              onSuccess={() => {
+                setShowProjectLogin(false);
+                setShowDashboard(true);
+              }}
+            />
+          </div>
+        )}
+
         {/* Dashboard Panel */}
-        {showDashboard && (
+        {isAdmin && showDashboard && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -309,6 +342,7 @@ export default function Projects() {
                     Code
                   </a>
                 </div>
+                {isAdmin && (
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleEdit(project)}
@@ -323,6 +357,7 @@ export default function Projects() {
                     <Trash2 size={13} />
                   </button>
                 </div>
+                )}
               </div>
             </motion.div>
           ))}
